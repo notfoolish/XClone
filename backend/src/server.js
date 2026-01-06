@@ -6,6 +6,7 @@ import cors from 'cors';
 import {clerkMiddleware} from "@clerk/clerk-sdk-node";
 import { clerkMiddleware } from '@clerk/express';
 import userRoutes from './routes/user.route.js';
+import postRoutes from './routes/post.route.js';
 //#endregion
 const app = express();
 
@@ -17,6 +18,12 @@ app.use(clerkMiddleware());
 app.get("/", (req, res) => res.send("Hello from the server!"));
 
 app.use("/api/users", userRoutes);
+app.use("/api/posts", postRoutes);
+
+app.use((err, req, res) =>{
+  console.error("Unhandled error:", err);
+  res.status(500).json({ error: "Internal Server Error" });
+})
 
 const startServer = async () => {
   try {
